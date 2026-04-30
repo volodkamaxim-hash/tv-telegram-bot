@@ -12,7 +12,7 @@ RENDER_URL = "https://tv-telegram-bot-2vki.onrender.com"
 
 def send_telegram(message):
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-    requests.post(url, json={"chat_id": CHAT_ID, "text": message})
+    requests.post(url, json={"chat_id": CHAT_ID, "text": message, "parse_mode": "HTML"})
 
 def keep_alive():
     while True:
@@ -33,15 +33,37 @@ def webhook():
         symbol = data.get("symbol", "N/A")
         signal = data.get("signal", "N/A")
         timeframe = data.get("timeframe", "N/A")
-        
+        price = data.get("price", "N/A")
+
+        # Эмодзи для сигнала
         if signal == "UP":
-            emoji = "🟢"
+            signal_emoji = "🟢"
             direction = "ЛОНГ ▲"
         else:
-            emoji = "🔴"
+            signal_emoji = "🔴"
             direction = "ШОРТ ▼"
-            
-        msg = f"{emoji} {direction}\n📊 {symbol}\n⏱ Таймфрейм: {timeframe}м"
+
+        # Эмодзи для таймфрейма
+        tf = str(timeframe)
+        if tf == "60":
+            tf_emoji = "🚨🚨 ЧАСОВИК 🚨🚨"
+        elif tf == "240":
+            tf_emoji = "🚨🚨🚨🚨🚨🚨 4 ЧАСА 🚨🚨🚨🚨🚨🚨"
+        elif tf == "15":
+            tf_emoji = "15м"
+        elif tf == "30":
+            tf_emoji = "30м"
+        elif tf == "5":
+            tf_emoji = "5м"
+        else:
+            tf_emoji = f"{tf}м"
+
+        msg = (
+            f"{signal_emoji} <b>{direction}</b>\n"
+            f"📊 {symbol}\n"
+            f"⏱ {tf_emoji}\n"
+            f"💰 Цена: <b>{price}</b>"
+        )
         send_telegram(msg)
     return "OK", 200
 
