@@ -39,9 +39,18 @@ def webhook():
         if signal == "UP":
             signal_emoji = "🟢"
             direction = "ЛОНГ ▲"
-        else:
+        elif signal == "DOWN":
             signal_emoji = "🔴"
             direction = "ШОРТ ▼"
+        elif signal == "ТЕСТ СОПРОТИВЛЕНИЯ":
+            signal_emoji = "⚠️"
+            direction = "ТЕСТ СОПРОТИВЛЕНИЯ 🔴"
+        elif signal == "ТЕСТ ПОДДЕРЖКИ":
+            signal_emoji = "⚠️"
+            direction = "ТЕСТ ПОДДЕРЖКИ 🟢"
+        else:
+            signal_emoji = "📌"
+            direction = signal
 
         # Эмодзи для таймфрейма
         tf = str(timeframe)
